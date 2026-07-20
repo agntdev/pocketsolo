@@ -1,19 +1,60 @@
 [
   {
-    "name": "/summaries",
+    "name": "/summaries shows summary status",
     "steps": [
       {
+        "send": { "text": "/summaries" },
         "expect": [
           {
             "method": "sendMessage",
             "payload": {
-              "text": "Toggle daily summary notifications"
+              "text": "Daily summaries are OFF."
             }
           }
-        ],
-        "send": {
-          "text": "/summaries"
-        }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "summaries button shows summary status",
+    "steps": [
+      {
+        "send": { "callback": "summaries:show" },
+        "expect": [
+          {
+            "method": "editMessageText",
+            "payload": {
+              "text": "Daily summaries are OFF."
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "toggling summaries turns them on",
+    "steps": [
+      {
+        "send": { "text": "/summaries" },
+        "expect": [
+          {
+            "method": "sendMessage",
+            "payload": {
+              "text": "Daily summaries are OFF."
+            }
+          }
+        ]
+      },
+      {
+        "send": { "callback": "summaries:toggle" },
+        "expect": [
+          {
+            "method": "editMessageText",
+            "payload": {
+              "text": "Daily summaries are now ON."
+            }
+          }
+        ]
       }
     ]
   }

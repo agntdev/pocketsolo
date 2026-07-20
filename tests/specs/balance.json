@@ -1,19 +1,33 @@
 [
   {
-    "name": "/balance",
+    "name": "/balance shows account balance",
     "steps": [
       {
+        "send": { "text": "/balance" },
         "expect": [
           {
             "method": "sendMessage",
             "payload": {
-              "text": "Show current account balance and equity"
+              "text": "Couldn't connect to Pocket Option. Check your credentials in environment variables and try again."
             }
           }
-        ],
-        "send": {
-          "text": "/balance"
-        }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "balance button shows account balance",
+    "steps": [
+      {
+        "send": { "callback": "balance:show" },
+        "expect": [
+          {
+            "method": "editMessageText",
+            "payload": {
+              "text": "Couldn't connect to Pocket Option. Check your credentials in environment variables and try again."
+            }
+          }
+        ]
       }
     ]
   }

@@ -1,15 +1,50 @@
 import { Composer } from "grammy";
+import type { Ctx } from "../bot.js";
+import { registerMainMenuItem, inlineButton, inlineKeyboard } from "../toolkit/index.js";
+import { getConfigStore } from "../services/storage.js";
 
-// SCAFFOLD — generated from the bot blueprint BEFORE the agent runs.
-// Keep a LIVE registration (.command / .callbackQuery / …) so this feature is
-// never an empty stub. Replace the reply body with real logic + copy; if you
-// change the user-facing text, update tests/specs to match EXACTLY.
-// Do NOT rewrite src/bot.ts — buildBot() already auto-loads this module.
+registerMainMenuItem({ label: "📊 Summaries", data: "summaries:show", order: 60 });
 
-const composer = new Composer();
+const composer = new Composer<Ctx>();
+
+const backMenu = inlineKeyboard([[inlineButton("⬅️ Back to menu", "menu:main")]]);
+
+function summaryKeyboard(enabled: boolean) {
+  return inlineKeyboard([
+    [
+      inlineButton(
+        enabled ? "✅ Daily summaries ON" : "Daily summaries OFF",
+        "summaries:toggle",
+      ),
+    ],
+    [inlineButton("⬅️ Back to menu", "menu:main")],
+  ]);
+}
 
 composer.command("summaries", async (ctx) => {
-  await ctx.reply("Toggle daily summary notifications");
+  const store = await getConfigStore();
+  const enabled = await store.getSummaryEnabled(String(ctx.from?.id ?? 0));
+  const status = enabled ? "Daily summaries are ON." : "Daily summaries are OFF.";
+  await ctx.reply(status, { reply_markup: summaryKeyboard(enabled) });
+});
+
+composer.callbackQuery("summaries:show", async (ctx) => {
+  await ctx.answerCallbackQuery();
+  const store = await getConfigStore();
+  const enabled = await store.getSummaryEnabled(String(ctx.from?.id ?? 0));
+  const status = enabled ? "Daily summaries are ON." : "Daily summaries are OFF.";
+  await ctx.editMessageText(status, { reply_markup: summaryKeyboard(enabled) });
+});
+
+composer.callbackQuery("summaries:toggle", async (ctx) => {
+  await ctx.answerCallbackQuery();
+  const store = await getConfigStore();
+  const userId = String(ctx.from?.id ?? 0);
+  const current = await store.getSummaryEnabled(userId);
+  await store.setSummaryEnabled(userId, !current);
+  const newEnabled = !current;
+  const status = newEnabled ? "Daily summaries are now ON." : "Daily summaries are now OFF.";
+  await ctx.editMessageText(status, { reply_markup: summaryKeyboard(newEnabled) });
 });
 
 export default composer;

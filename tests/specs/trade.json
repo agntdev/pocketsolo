@@ -1,19 +1,267 @@
 [
   {
-    "name": "/trade",
+    "name": "/trade starts the trade wizard",
     "steps": [
       {
+        "send": { "text": "/trade" },
         "expect": [
           {
             "method": "sendMessage",
             "payload": {
-              "text": "Place a new trade with parameters: symbol, direction, amount, duration"
+              "text": "Pick an asset to trade:"
             }
           }
-        ],
-        "send": {
-          "text": "/trade"
-        }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "trade button starts the trade wizard",
+    "steps": [
+      {
+        "send": { "callback": "trade:start" },
+        "expect": [
+          {
+            "method": "editMessageText",
+            "payload": {
+              "text": "Pick an asset to trade:"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "selecting a symbol moves to direction",
+    "steps": [
+      {
+        "send": { "text": "/trade" },
+        "expect": [
+          {
+            "method": "sendMessage",
+            "payload": { "text": "Pick an asset to trade:" }
+          }
+        ]
+      },
+      {
+        "send": { "callback": "trade:sym:EUR/USD" },
+        "expect": [
+          {
+            "method": "editMessageText",
+            "payload": { "text": "EUR/USD — pick direction:" }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "selecting direction moves to amount",
+    "steps": [
+      {
+        "send": { "text": "/trade" },
+        "expect": [
+          {
+            "method": "sendMessage",
+            "payload": { "text": "Pick an asset to trade:" }
+          }
+        ]
+      },
+      {
+        "send": { "callback": "trade:sym:EUR/USD" },
+        "expect": [
+          {
+            "method": "editMessageText",
+            "payload": { "text": "EUR/USD — pick direction:" }
+          }
+        ]
+      },
+      {
+        "send": { "callback": "trade:dir:call" },
+        "expect": [
+          {
+            "method": "editMessageText",
+            "payload": { "text": "How much to risk? Enter a dollar amount:" }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "selecting amount moves to duration",
+    "steps": [
+      {
+        "send": { "text": "/trade" },
+        "expect": [
+          {
+            "method": "sendMessage",
+            "payload": { "text": "Pick an asset to trade:" }
+          }
+        ]
+      },
+      {
+        "send": { "callback": "trade:sym:EUR/USD" },
+        "expect": [
+          {
+            "method": "editMessageText",
+            "payload": { "text": "EUR/USD — pick direction:" }
+          }
+        ]
+      },
+      {
+        "send": { "callback": "trade:dir:call" },
+        "expect": [
+          {
+            "method": "editMessageText",
+            "payload": { "text": "How much to risk? Enter a dollar amount:" }
+          }
+        ]
+      },
+      {
+        "send": { "callback": "trade:amt:10" },
+        "expect": [
+          {
+            "method": "editMessageText",
+            "payload": { "text": "Pick duration:" }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "selecting duration shows confirmation",
+    "steps": [
+      {
+        "send": { "text": "/trade" },
+        "expect": [
+          {
+            "method": "sendMessage",
+            "payload": { "text": "Pick an asset to trade:" }
+          }
+        ]
+      },
+      {
+        "send": { "callback": "trade:sym:EUR/USD" },
+        "expect": [
+          {
+            "method": "editMessageText",
+            "payload": { "text": "EUR/USD — pick direction:" }
+          }
+        ]
+      },
+      {
+        "send": { "callback": "trade:dir:call" },
+        "expect": [
+          {
+            "method": "editMessageText",
+            "payload": { "text": "How much to risk? Enter a dollar amount:" }
+          }
+        ]
+      },
+      {
+        "send": { "callback": "trade:amt:10" },
+        "expect": [
+          {
+            "method": "editMessageText",
+            "payload": { "text": "Pick duration:" }
+          }
+        ]
+      },
+      {
+        "send": { "callback": "trade:dur:60" },
+        "expect": [
+          {
+            "method": "editMessageText",
+            "payload": {
+              "text": "Confirm trade:\n\nAsset: EUR/USD\nDirection: 📈 Call\nAmount: $10\nDuration: 1m"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "confirming trade fails without credentials",
+    "steps": [
+      {
+        "send": { "text": "/trade" },
+        "expect": [
+          {
+            "method": "sendMessage",
+            "payload": { "text": "Pick an asset to trade:" }
+          }
+        ]
+      },
+      {
+        "send": { "callback": "trade:sym:EUR/USD" },
+        "expect": [
+          {
+            "method": "editMessageText",
+            "payload": { "text": "EUR/USD — pick direction:" }
+          }
+        ]
+      },
+      {
+        "send": { "callback": "trade:dir:call" },
+        "expect": [
+          {
+            "method": "editMessageText",
+            "payload": { "text": "How much to risk? Enter a dollar amount:" }
+          }
+        ]
+      },
+      {
+        "send": { "callback": "trade:amt:10" },
+        "expect": [
+          {
+            "method": "editMessageText",
+            "payload": { "text": "Pick duration:" }
+          }
+        ]
+      },
+      {
+        "send": { "callback": "trade:dur:60" },
+        "expect": [
+          {
+            "method": "editMessageText",
+            "payload": {
+              "text": "Confirm trade:\n\nAsset: EUR/USD\nDirection: 📈 Call\nAmount: $10\nDuration: 1m"
+            }
+          }
+        ]
+      },
+      {
+        "send": { "callback": "trade:confirm:yes" },
+        "expect": [
+          {
+            "method": "editMessageText",
+            "payload": {
+              "text": "Couldn't connect to Pocket Option. Check your credentials and try again."
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "cancelling trade wizard",
+    "steps": [
+      {
+        "send": { "text": "/trade" },
+        "expect": [
+          {
+            "method": "sendMessage",
+            "payload": { "text": "Pick an asset to trade:" }
+          }
+        ]
+      },
+      {
+        "send": { "callback": "trade:cancel" },
+        "expect": [
+          {
+            "method": "editMessageText",
+            "payload": { "text": "Trade cancelled." }
+          }
+        ]
       }
     ]
   }

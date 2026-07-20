@@ -1,19 +1,33 @@
 [
   {
-    "name": "/open",
+    "name": "/open shows open positions",
     "steps": [
       {
+        "send": { "text": "/open" },
         "expect": [
           {
             "method": "sendMessage",
             "payload": {
-              "text": "List all open positions"
+              "text": "Couldn't connect to Pocket Option. Check your credentials and try again."
             }
           }
-        ],
-        "send": {
-          "text": "/open"
-        }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "open button shows open positions",
+    "steps": [
+      {
+        "send": { "callback": "open:show" },
+        "expect": [
+          {
+            "method": "editMessageText",
+            "payload": {
+              "text": "Couldn't connect to Pocket Option. Check your credentials and try again."
+            }
+          }
+        ]
       }
     ]
   }
