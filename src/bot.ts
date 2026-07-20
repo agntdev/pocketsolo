@@ -6,7 +6,11 @@ import { createBot, type BotContext } from "./toolkit/index.js";
 // bot grows. Durable domain data must NOT live here — use the toolkit's
 // persistent storage (see AGENTS.md).
 export interface Session {
-  // example: step?: "awaiting_amount";
+  tradeStep?: "symbol" | "direction" | "amount" | "duration" | "confirm";
+  tradeSymbol?: string;
+  tradeDirection?: "call" | "put";
+  tradeAmount?: number;
+  tradeDuration?: number;
 }
 
 export type Ctx = BotContext<Session>;

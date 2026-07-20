@@ -1,19 +1,33 @@
 [
   {
-    "name": "/cancel",
+    "name": "/cancel shows no active trades",
     "steps": [
       {
+        "send": { "text": "/cancel" },
         "expect": [
           {
             "method": "sendMessage",
             "payload": {
-              "text": "Attempt to cancel a trade by ID"
+              "text": "No active trades to cancel."
             }
           }
-        ],
-        "send": {
-          "text": "/cancel"
-        }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "cancel button shows no active trades",
+    "steps": [
+      {
+        "send": { "callback": "cancel:show" },
+        "expect": [
+          {
+            "method": "editMessageText",
+            "payload": {
+              "text": "No active trades to cancel."
+            }
+          }
+        ]
       }
     ]
   }

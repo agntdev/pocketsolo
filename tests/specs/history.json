@@ -1,19 +1,33 @@
 [
   {
-    "name": "/history",
+    "name": "/history shows trade history",
     "steps": [
       {
+        "send": { "text": "/history" },
         "expect": [
           {
             "method": "sendMessage",
             "payload": {
-              "text": "Show recent trades with outcomes"
+              "text": "Couldn't connect to Pocket Option. Check your credentials and try again."
             }
           }
-        ],
-        "send": {
-          "text": "/history"
-        }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "history button shows trade history",
+    "steps": [
+      {
+        "send": { "callback": "history:show" },
+        "expect": [
+          {
+            "method": "editMessageText",
+            "payload": {
+              "text": "Couldn't connect to Pocket Option. Check your credentials and try again."
+            }
+          }
+        ]
       }
     ]
   }
