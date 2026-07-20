@@ -1,0 +1,20 @@
+[
+  {
+    "name": "/balance",
+    "steps": [
+      {
+        "expect": [
+          {
+            "method": "sendMessage",
+            "payload": {
+              "text": "Show current account balance and equity"
+            }
+          }
+        ],
+        "send": {
+          "text": "/balance"
+        }
+      }
+    ]
+  }
+]
